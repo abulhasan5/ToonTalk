@@ -318,7 +318,7 @@
         // =======================================================
         
         // আউটগোয়িং কল করার লজিক (Call Init)
-        window.makeCall = async function(type) {
+       window.makeCall = async function(type) {
     let chatHeader = document.getElementById("chat-user-name").innerText;
     let receiverName = chatHeader.split(' ')[0]; 
     
@@ -357,34 +357,32 @@
             stopStreamAndClose();
         }
     });
-        }
+};
 
-// Background listener for incoming calls
-    function listenForIncomingCalls() {
-        const incomingCallRef = ref(db, 'calls/' + currentUser.phone);
-        onValue(incomingCallRef, async (snapshot) => {
-            if (snapshot.exists()) {
-                const callData = snapshot.val();
-                if (callData.status === 'ringing') {
-                    document.getElementById("call-screen-name").innerText = callData.callerName;
-                    document.getElementById("call-screen-status").innerText = `Incoming ${callData.type} Call...`;
-                    document.getElementById("call-accept-btn").classList.remove("hidden");
-                    document.getElementById("call-screen").classList.remove("hidden");
+function listenForIncomingCalls() {
+    const incomingCallRef = ref(db, 'calls/' + currentUser.phone);
+    onValue(incomingCallRef, async (snapshot) => {
+        if (snapshot.exists()) {
+            const callData = snapshot.val();
+            if (callData.status === 'ringing') {
+                document.getElementById("call-screen-name").innerText = callData.callerName;
+                document.getElementById("call-screen-status").innerText = `Incoming ${callData.type} Call...`;
+                document.getElementById("call-accept-btn").classList.remove("hidden");
+                document.getElementById("call-screen").classList.remove("hidden");
 
-                    if(callData.type === 'video') {
-                        document.getElementById("video-container").classList.remove("hidden");
-                    } else {
-                        document.getElementById("video-container").classList.add("hidden");
-                    }
-
-                    // Play ringtone
-                    document.getElementById("ringtone-audio").play().catch(e => {});
+                if(callData.type === 'video') {
+                    document.getElementById("video-container").classList.remove("hidden");
+                } else {
+                    document.getElementById("video-container").classList.add("hidden");
                 }
-            } else {
-                stopStreamAndClose();
+
+                document.getElementById("ringtone-audio").play().catch(e => {});
             }
-        });
-    }
+        } else {
+            stopStreamAndClose();
+        }
+    });
+                                }
         // কল রিসিভ বা একসেপ্ট করার লজিক
         window.acceptCall = async function() {
             document.getElementById("ringtone-audio").pause();
