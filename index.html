@@ -4,127 +4,129 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>N-Talk Chat & Call</title>
-    <!-- Tailwind CSS for Modern Styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for Premium Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-100 font-sans antialiased h-screen flex flex-col">
+<body class="bg-gray-100 font-sans antialiased h-screen flex flex-col overflow-hidden">
 
-    <!-- =========== ১. লগইন এবং রেজিস্ট্রেশন সেকশন =========== -->
     <div id="auth-section" class="flex-1 flex flex-col justify-center items-center px-4">
         <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
-            <h2 id="auth-title" class="text-3xl font-extrabold text-gray-800 text-center mb-6">লগইন করুন</h2>
+            <h2 id="auth-title" class="text-3xl font-extrabold text-gray-800 text-center mb-6">Login</h2>
             
             <div class="space-y-4">
-                <!-- নাম ইনপুট (শুধুমাত্র রেজিস্ট্রেশনের সময় দেখাবে) -->
                 <div id="name-box" class="hidden">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">আপনার নাম</label>
-                    <input type="text" id="auth-name" placeholder="নাম লিখুন" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+                    <input type="text" id="auth-name" placeholder="Enter name" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition">
                 </div>
 
-                <!-- মোবাইল নম্বর ইনপুট -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">মোবাইল নম্বর</label>
-                    <input type="tel" id="auth-phone" placeholder="০১৭XXXXXXXX" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mobile Number</label>
+                    <input type="tel" id="auth-phone" placeholder="017XXXXXXXX" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition">
                 </div>
 
-                <!-- পাসওয়ার্ড ইনপুট -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">পাসওয়ার্ড</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
                     <input type="password" id="auth-password" placeholder="******" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition">
                 </div>
 
-                <!-- সাবমিট বাটন -->
-                <button id="auth-btn" onclick="handleAuth()" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-red-200 transition transform active:scale-95">লগইন</button>
+                <button id="auth-btn" onclick="handleAuth()" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-red-200 transition transform active:scale-95">Login</button>
                 
-                <!-- টগল বাটন -->
                 <p class="text-center text-sm text-gray-600 mt-4">
-                    <span id="auth-toggle-text">নতুন অ্যাকাউন্ট তৈরি করতে চান?</span>
-                    <button onclick="toggleAuthMode()" id="auth-toggle-btn" class="text-red-500 font-bold ml-1 hover:underline">রেজিস্ট্রেশন করুন</button>
+                    <span id="auth-toggle-text">Need an account?</span>
+                    <button onclick="toggleAuthMode()" id="auth-toggle-btn" class="text-red-500 font-bold ml-1 hover:underline">Register</button>
                 </p>
             </div>
         </div>
     </div>
 
-    <!-- =========== ২. মেইন ড্যাশবোর্ড সেকশন (লগইন এর পর দেখাবে) =========== -->
     <div id="dashboard-section" class="hidden flex-1 flex flex-col h-full">
-        <!-- ড্যাশবোর্ড হেডার -->
         <header class="bg-red-500 text-white px-4 py-4 shadow-md flex justify-between items-center sticky top-0 z-50">
-            <h1 id="welcome-msg" class="text-lg font-bold">হ্যালো, ইউজার</h1>
-            <button onclick="logout()" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm font-bold transition">লগআউট</button>
+            <h1 id="welcome-msg" class="text-lg font-bold">Hello, User</h1>
+            <button onclick="logout()" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm font-bold transition">Logout</button>
         </header>
 
-        <!-- ইউজার লিস্ট এরিয়া -->
         <main class="flex-1 overflow-y-auto p-4 space-y-3 max-w-2xl w-full mx-auto" id="user-list">
-            <!-- জাভাস্ক্রিপ্ট দিয়ে এখানে ইউজার লিস্ট ভেসে উঠবে -->
         </main>
     </div>
 
-    <!-- =========== ৩. চ্যাট স্ক্রিন সেকশন (মেসেজ, ওপরে ৩টি বাটন) =========== -->
     <div id="chat-section" class="hidden flex-1 flex flex-col h-full bg-slate-50">
-        <!-- চ্যাট হেডার (৩টি বাটন সহ) -->
         <header class="bg-white border-b border-gray-200 px-4 py-3 flex justify-between items-center sticky top-0 z-50 shadow-sm">
-            <!-- বামে ব্যাক বাটন ও নাম -->
             <div class="flex items-center space-x-3">
                 <button onclick="backToDashboard()" class="text-gray-600 hover:text-gray-800 text-xl p-1">
                     <i class="fa-solid fa-arrow-left"></i>
                 </button>
                 <div>
-                    <h3 id="chat-user-name" class="font-bold text-gray-800 text-base">ইউজারের নাম</h3>
-                    <p class="text-xs text-green-500 font-medium"><i class="fa-solid fa-circle text-[8px] mr-1"></i>অনলাইন</p>
+                    <h3 id="chat-user-name" class="font-bold text-gray-800 text-base">User Name</h3>
+                    <p class="text-xs text-green-500 font-medium"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Online</p>
                 </div>
             </div>
 
-            <!-- ডানে আপনার কাঙ্ক্ষিত ৩টি বাটন (অডিও, ভিডিও, প্রোফাইল) -->
             <div class="flex items-center space-x-2">
-                <button onclick="startAudioCall()" class="w-10 h-10 rounded-full bg-green-50 hover:bg-green-100 text-green-600 flex items-center justify-center transition active:scale-95" title="অডিও কল">
+                <button onclick="makeCall('audio')" class="w-10 h-10 rounded-full bg-green-50 hover:bg-green-100 text-green-600 flex items-center justify-center transition active:scale-95" title="Audio Call">
                     <i class="fa-solid fa-phone text-lg"></i>
                 </button>
-                <button onclick="startVideoCall()" class="w-10 h-10 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition active:scale-95" title="ভিডিও কল">
+                <button onclick="makeCall('video')" class="w-10 h-10 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition active:scale-95" title="Video Call">
                     <i class="fa-solid fa-video text-lg"></i>
                 </button>
-                <button onclick="openProfileModal()" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center transition active:scale-95" title="প্রোফাইল">
+                <button onclick="openProfileModal()" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center transition active:scale-95" title="Profile">
                     <i class="fa-solid fa-user text-lg"></i>
                 </button>
             </div>
         </header>
 
-        <!-- মাঝখানের মেসেজ হিস্ট্রি এরিয়া -->
         <div id="message-container" class="flex-1 overflow-y-auto p-4 space-y-3">
-            <!-- পুরনো এবং নতুন সব মেসেজ এখানে অটো লোড হবে -->
         </div>
 
-        <!-- নিচের মেসেজ ইনপুট বক্স -->
         <footer class="bg-white border-t border-gray-200 p-3 flex items-center space-x-2 sticky bottom-0">
-            <input type="text" id="msg-input" placeholder="এখানে মেসেজ লিখুন..." class="flex-1 bg-gray-100 px-4 py-3 rounded-full border-none focus:ring-2 focus:ring-red-500 outline-none text-sm transition">
+            <input type="text" id="msg-input" placeholder="Type a message..." class="flex-1 bg-gray-100 px-4 py-3 rounded-full border-none focus:ring-2 focus:ring-red-500 outline-none text-sm transition">
             <button onclick="sendMessage()" class="w-11 h-11 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-md shadow-red-100 transition active:scale-95">
                 <i class="fa-solid fa-paper-plane text-sm ml-0.5"></i>
             </button>
         </footer>
     </div>
 
-    <!-- =========== ৪. প্রোফাইল পপআপ বা মডাল =========== -->
     <div id="profile-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex justify-center items-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center shadow-2xl relative">
             <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl">&times;</button>
             <div class="w-20 h-20 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold">
                 <i class="fa-solid fa-user-tie"></i>
             </div>
-            <h4 id="modal-user-name" class="text-xl font-bold text-gray-800">নাম</h4>
-            <p id="modal-user-phone" class="text-gray-500 text-sm mt-1">০১৭XXXXXXXX</p>
-            <p class="text-xs bg-gray-100 text-gray-600 inline-block px-3 py-1 rounded-full mt-4 border border-gray-200">N-Talk মেম্বার</p>
+            <h4 id="modal-user-name" class="text-xl font-bold text-gray-800">Name</h4>
+            <p id="modal-user-phone" class="text-gray-500 text-sm mt-1">017XXXXXXXX</p>
+            <p class="text-xs bg-gray-100 text-gray-600 inline-block px-3 py-1 rounded-full mt-4 border border-gray-200">N-Talk Member</p>
         </div>
     </div>
 
-    <!-- ======================================================= -->
-    <!-- ============ ফায়ারবেস এবং মূল লজিক স্ক্রিপ্ট ============ -->
-    <!-- ======================================================= -->
+    <div id="call-screen" class="hidden fixed inset-0 bg-slate-900 z-50 flex flex-col justify-between items-center p-8 text-white">
+        <div class="text-center mt-12 space-y-3">
+            <div class="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mx-auto text-4xl shadow-xl backdrop-blur-md">
+                <i class="fa-solid fa-user text-white/70"></i>
+            </div>
+            <h2 id="call-screen-name" class="text-3xl font-bold">User Name</h2>
+            <p id="call-screen-status" class="text-red-400 font-medium tracking-wider animate-pulse">Calling...</p>
+        </div>
+
+        <div id="video-container" class="hidden w-full max-w-md h-72 bg-black/50 rounded-2xl relative border border-white/10 overflow-hidden shadow-2xl">
+            <video id="remote-video" autoplay playsinline class="w-full h-full object-cover"></video>
+            <video id="local-video" autoplay playsinline muted class="absolute bottom-3 right-3 w-28 h-40 object-cover rounded-xl border-2 border-white shadow-md"></video>
+        </div>
+
+        <div class="mb-12 w-full max-w-sm flex justify-center items-center space-x-6">
+            <button id="call-accept-btn" onclick="acceptCall()" class="hidden w-16 h-16 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center shadow-lg shadow-green-900/40 transition active:scale-95 text-2xl">
+                <i class="fa-solid fa-phone"></i>
+            </button>
+            <button id="call-hangup-btn" onclick="hangupCall()" class="w-16 h-16 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center shadow-lg shadow-red-900/40 transition active:scale-95 text-2xl">
+                <i class="fa-solid fa-phone-slash"></i>
+            </button>
+        </div>
+    </div>
+
+    <audio id="ringtone-audio" loop src="https://assets.mixkit.co/active_storage/sfx/1359/1359-84.wav" class="hidden"></audio>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, get, child, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, get, child, onValue, push, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // ফায়ারবেস কনফিগারেশন (আপনার ডাটাবেজ URL অনুযায়ী সেট করা)
         const firebaseConfig = {
             databaseURL: "https://toontalk-98d67-default-rtdb.firebaseio.com/"
         };
@@ -132,12 +134,14 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // গ্লোবাল ভ্যারিয়েবলসমূহ
         let isSignUpMode = false;
         let currentUser = JSON.parse(localStorage.getItem("chat_current_user")) || null;
         let activeChatUserPhone = null;
+        
+        let localStream = null;
+        let peerConnection = null;
+        let currentCallRef = null;
 
-        // পেজ লোড হওয়ার সাথে সাথে চেক করবে ইউজার লগইন আছে কিনা
         window.onload = function() {
             checkUserSession();
         };
@@ -147,8 +151,9 @@
                 document.getElementById("auth-section").classList.add("hidden");
                 document.getElementById("dashboard-section").classList.remove("hidden");
                 document.getElementById("chat-section").classList.add("hidden");
-                document.getElementById("welcome-msg").innerText = `হ্যালো, ${currentUser.name}`;
+                document.getElementById("welcome-msg").innerText = `Hello, ${currentUser.name}`;
                 loadUserList();
+                listenForIncomingCalls(); // ইনকামিং কলের জন্য লিসেনার চালু
             } else {
                 document.getElementById("auth-section").classList.remove("hidden");
                 document.getElementById("dashboard-section").classList.add("hidden");
@@ -156,37 +161,34 @@
             }
         }
 
-        // লগইন ও রেজিস্ট্রেশন মোড পরিবর্তন করা
         window.toggleAuthMode = function() {
             isSignUpMode = !isSignUpMode;
             document.getElementById("name-box").classList.toggle("hidden", !isSignUpMode);
-            document.getElementById("auth-title").innerText = isSignUpMode ? "নতুন অ্যাকাউন্ট" : "লগইন করুন";
-            document.getElementById("auth-btn").innerText = isSignUpMode ? "নিবন্ধন করুন" : "লগইন";
-            document.getElementById("auth-toggle-text").innerText = isSignUpMode ? "আগে থেকেই অ্যাকাউন্ট আছে?" : "নতুন অ্যাকাউন্ট তৈরি করতে চান?";
-            document.getElementById("auth-toggle-btn").innerText = isSignUpMode ? "লগইন করুন" : "রেজিস্ট্রেশন করুন";
+            document.getElementById("auth-title").innerText = isSignUpMode ? "Register" : "Login";
+            document.getElementById("auth-btn").innerText = isSignUpMode ? "Register" : "Login";
+            document.getElementById("auth-toggle-text").innerText = isSignUpMode ? "Already have an account?" : "Need an account?";
+            document.getElementById("auth-toggle-btn").innerText = isSignUpMode ? "Login" : "Register";
         };
 
-        // লগইন এবং রেজিস্ট্রেশন হ্যান্ডেল করার ফাংশন
         window.handleAuth = function() {
             const name = document.getElementById("auth-name").value.trim();
             const phone = document.getElementById("auth-phone").value.trim();
             const password = document.getElementById("auth-password").value.trim();
 
             if (!phone || !password || (isSignUpMode && !name)) {
-                alert("দয়া করে সব তথ্য সঠিকভাবে পূরণ করুন!");
+                alert("Please fill in all details!");
                 return;
             }
 
             const userRef = ref(db, 'users/' + phone);
 
             if (isSignUpMode) {
-                // রেজিস্ট্রেশন লজিক
                 get(userRef).then((snapshot) => {
                     if (snapshot.exists()) {
-                        alert("এই মোবাইল নম্বর দিয়ে অলরেডি অ্যাকাউন্ট খোলা আছে!");
+                        alert("Mobile number already registered!");
                     } else {
                         set(userRef, { name: name, phone: phone, password: password }).then(() => {
-                            alert("অ্যাকাউন্ট তৈরি সফল হয়েছে!");
+                            alert("Registration successful!");
                             currentUser = { name: name, phone: phone };
                             localStorage.setItem("chat_current_user", JSON.stringify(currentUser));
                             checkUserSession();
@@ -194,20 +196,18 @@
                     }
                 });
             } else {
-                // লগইন লজিক
                 get(userRef).then((snapshot) => {
                     if (snapshot.exists() && snapshot.val().password === password) {
                         currentUser = { name: snapshot.val().name, phone: phone };
                         localStorage.setItem("chat_current_user", JSON.stringify(currentUser));
                         checkUserSession();
                     } else {
-                        alert("মোবাইল নম্বর অথবা পাসওয়ার্ড ভুল হয়েছে!");
+                        alert("Invalid phone or password!");
                     }
                 });
             }
         };
 
-        // ডাটাবেজ থেকে সমস্ত ইউজারের লিস্ট লোড করা
         function loadUserList() {
             const usersRef = ref(db, 'users');
             onValue(usersRef, (snapshot) => {
@@ -217,7 +217,6 @@
                 if (snapshot.exists()) {
                     snapshot.forEach((childSnapshot) => {
                         const user = childSnapshot.val();
-                        // নিজের আইডিটি লিস্টে দেখাবে না
                         if (user.phone !== currentUser.phone) {
                             const userCard = document.createElement("div");
                             userCard.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center hover:shadow-md transition";
@@ -231,7 +230,7 @@
                                         <p class="text-xs text-gray-500">${user.phone}</p>
                                     </div>
                                 </div>
-                                <button onclick="openChat('${user.phone}', '${user.name}')" class="bg-red-500 hover:bg-red-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-sm shadow-red-100 active:scale-95">
+                                <button onclick="openChat('${user.phone}', '${user.name}')" class="bg-red-500 hover:bg-red-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-sm active:scale-95">
                                     <i class="fa-solid fa-message mr-1"></i> Message
                                 </button>
                             `;
@@ -239,31 +238,26 @@
                         }
                     });
                 } else {
-                    userListContainer.innerHTML = `<p class="text-center text-gray-500 py-8">কোনো ইউজার পাওয়া যায়নি।</p>`;
+                    userListContainer.innerHTML = `<p class="text-center text-gray-500 py-8">No users found.</p>`;
                 }
             });
         }
 
-        // চ্যাট উইন্ডো ওপেন করার ফাংশন
         window.openChat = function(phone, name) {
             activeChatUserPhone = phone;
             document.getElementById("dashboard-section").classList.add("hidden");
             document.getElementById("chat-section").classList.remove("hidden");
             document.getElementById("chat-user-name").innerText = name;
-            
             loadMessages();
         };
 
-        // ড্যাশবোর্ডে ফিরে যাওয়ার ফাংশন
         window.backToDashboard = function() {
             activeChatUserPhone = null;
             document.getElementById("chat-section").classList.add("hidden");
             document.getElementById("dashboard-section").classList.remove("hidden");
         };
 
-        // রিয়েল-টাইমে মেসেজ হিস্ট্রি লোড করা
         function loadMessages() {
-            // চ্যাট রুমের জন্য একটি ইউনিক আইডি তৈরি (যেমন: user1_user2)
             const chatRoomId = currentUser.phone < activeChatUserPhone ? 
                                `${currentUser.phone}_${activeChatUserPhone}` : 
                                `${activeChatUserPhone}_${currentUser.phone}`;
@@ -291,15 +285,13 @@
                         `;
                         container.appendChild(msgRow);
                     });
-                    // অটো স্ক্রোল ডাউন করে একদম নিচের নতুন মেসেজে নিয়ে যাবে
                     container.scrollTop = container.scrollHeight;
                 } else {
-                    container.innerHTML = `<p class="text-center text-gray-400 text-xs py-12">কোনো পুরনো মেসেজ নেই। চ্যাট শুরু করুন!</p>`;
+                    container.innerHTML = `<p class="text-center text-gray-400 text-xs py-12">No messages yet. Say Hi!</p>`;
                 }
             });
         }
 
-        // মেসেজ পাঠানোর ফাংশন
         window.sendMessage = function() {
             const input = document.getElementById("msg-input");
             const text = input.value.trim();
@@ -321,14 +313,122 @@
             });
         };
 
-        // ওপরের ৩টি বাটনের অ্যাকশন সমূহ
-        window.startAudioCall = function() {
-            alert(document.getElementById("chat-user-name").innerText + " কে অ디오 কল করা হচ্ছে... (ফিচারটি ডেভেলপমেন্টে আছে)");
+        // =======================================================
+        // ============ রিয়েল-টাইম কলিং ব্যাকএন্ড সিস্টেম ============
+        // =======================================================
+        
+        // আউটগোয়িং কল করার লজিক (Call Init)
+        window.makeCall = async function(type) {
+            const receiverName = document.getElementById("chat-user-name").innerText;
+            
+            document.getElementById("call-screen-name").innerText = receiverName;
+            document.getElementById("call-screen-status").innerText = "Ringing...";
+            document.getElementById("call-accept-btn").classList.add("hidden");
+            document.getElementById("call-screen").classList.remove("hidden");
+            
+            if(type === 'video') {
+                document.getElementById("video-container").classList.remove("hidden");
+                try {
+                    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                    document.getElementById("local-video").srcObject = localStream;
+                } catch (e) { console.error("Camera access denied", e); }
+            } else {
+                document.getElementById("video-container").classList.add("hidden");
+            }
+
+            // ফায়ারবেসে কল রিকোয়েস্ট তৈরি করা
+            currentCallRef = ref(db, 'calls/' + activeChatUserPhone);
+            set(currentCallRef, {
+                caller: currentUser.phone,
+                callerName: currentUser.name,
+                type: type,
+                status: 'ringing'
+            });
+
+            // কল রিসিভ বা কাটার ওপর নজর রাখা
+            onValue(currentCallRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const callData = snapshot.val();
+                    if (callData.status === 'accepted') {
+                        document.getElementById("call-screen-status").innerText = "Connected";
+                        document.getElementById("ringtone-audio").pause();
+                    }
+                } else {
+                    // যদি অপরপ্রান্ত কেটে দেয়
+                    stopStreamAndClose();
+                }
+            });
         };
 
-        window.startVideoCall = function() {
-            alert(document.getElementById("chat-user-name").innerText + " কে ভিডিও কল করা হচ্ছে... (ফিচারটি ডেভেলপমেন্টে আছে)");
+        // ইনকামিং কলের জন্য ব্যাকগ্রাউন্ড লিসেনার
+        function listenForIncomingCalls() {
+            const incomingCallRef = ref(db, 'calls/' + currentUser.phone);
+            onValue(incomingCallRef, async (snapshot) => {
+                if (snapshot.exists()) {
+                    const callData = snapshot.val();
+                    if (callData.status === 'ringing') {
+                        document.getElementById("call-screen-name").innerText = callData.callerName;
+                        document.getElementById("call-screen-status").innerText = `Incoming ${callData.type} Call...`;
+                        document.getElementById("call-accept-btn").classList.remove("hidden");
+                        document.getElementById("call-screen").classList.remove("hidden");
+                        
+                        if(callData.type === 'video') {
+                            document.getElementById("video-container").classList.remove("hidden");
+                        } else {
+                            document.getElementById("video-container").classList.add("hidden");
+                        }
+
+                        // রিংটোন প্লে করা
+                        document.getElementById("ringtone-audio").play().catch(e => {});
+                    }
+                } else {
+                    // কল কেটে দিলে স্ক্রিন বন্ধ হবে
+                    stopStreamAndClose();
+                }
+            });
+        }
+
+        // কল রিসিভ বা একসেপ্ট করার লজিক
+        window.acceptCall = async function() {
+            document.getElementById("ringtone-audio").pause();
+            const incomingCallRef = ref(db, 'calls/' + currentUser.phone);
+            
+            get(incomingCallRef).then(async (snapshot) => {
+                if(snapshot.exists()) {
+                    const callData = snapshot.val();
+                    set(incomingCallRef, { ...callData, status: 'accepted' });
+                    document.getElementById("call-screen-status").innerText = "Connected";
+                    document.getElementById("call-accept-btn").classList.add("hidden");
+
+                    if(callData.type === 'video') {
+                        try {
+                            localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                            document.getElementById("local-video").srcObject = localStream;
+                        } catch(e) { console.error(e); }
+                    }
+                }
+            });
         };
+
+        // কল ডিসকানেক্ট বা কাটার লজিক
+        window.hangupCall = function() {
+            document.getElementById("ringtone-audio").pause();
+            const targetPhone = activeChatUserPhone || currentUser.phone;
+            if(targetPhone) {
+                remove(ref(db, 'calls/' + targetPhone));
+            }
+            stopStreamAndClose();
+        };
+
+        function stopStreamAndClose() {
+            document.getElementById("ringtone-audio").pause();
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+                localStream = null;
+            }
+            document.getElementById("call-screen").classList.add("hidden");
+            document.getElementById("local-video").srcObject = null;
+        }
 
         window.openProfileModal = function() {
             document.getElementById("modal-user-name").innerText = document.getElementById("chat-user-name").innerText;
@@ -340,7 +440,6 @@
             document.getElementById("profile-modal").classList.add("hidden");
         };
 
-        // লগআউট ফাংশন
         window.logout = function() {
             localStorage.removeItem("chat_current_user");
             currentUser = null;
@@ -348,4 +447,4 @@
         };
     </script>
 </body>
-                </html>
+</html>
