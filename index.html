@@ -3,285 +3,349 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ToonTalk - Realtime Call</title>
+    <title>N-Talk Chat & Call</title>
+    <!-- Tailwind CSS for Modern Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Premium Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Arial', sans-serif; }
-        body { background: #f0f3f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .app-container { width: 100%; max-width: 450px; height: 100vh; background: #fff; position: relative; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        
-        /* Pages Common Style */
-        .page { width: 100%; height: 100%; display: none; padding: 20px; flex-direction: column; justify-content: center; align-items: center; position: absolute; top: 0; left: 0; }
-        .active { display: flex; }
-
-        /* Auth Page Design */
-        .auth-bg { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); }
-        .logo { font-size: 3rem; color: #ff4757; margin-bottom: 20px; font-weight: bold; text-shadow: 2px 2px #fff; }
-        .auth-box { width: 100%; background: rgba(255, 255, 255, 0.9); padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .input-group { margin-bottom: 15px; width: 100%; }
-        .input-group input { width: 100%; padding: 12px 15px; border: 2px solid #ffccd2; border-radius: 10px; font-size: 1rem; outline: none; transition: 0.3s; }
-        .input-group input:focus { border-color: #ff4757; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; }
-        .btn-primary { background: #ff4757; color: white; }
-        .btn-link { background: none; color: #ff4757; margin-top: 15px; font-size: 0.9rem; border: none; cursor: pointer; }
-
-        /* Dashboard Page Design */
-        .dash-header { width: 100%; background: #ff4757; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; position: absolute; top: 0; left: 0; z-index: 10; }
-        .user-list { width: 100%; margin-top: 70px; overflow-y: auto; height: calc(100% - 70px); padding: 10px; }
-        .user-card { background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .online-dot { width: 10px; height: 10px; background: #2ed573; border-radius: 50%; display: inline-block; margin-right: 8px; }
-        .call-btn { background: #2ed573; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-
-        /* Calling Screen Design */
-        .call-bg { background: #2f3542; color: white; justify-content: space-between; padding: 50px 20px; z-index: 20; }
-        .caller-info { text-align: center; margin-top: 50px; }
-        .caller-avatar { width: 100px; height: 100px; background: #ff4757; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 3rem; margin: 0 auto 20px; }
-        .call-status { color: #a4b0be; font-size: 1.1rem; margin-top: 10px; animation: blink 1.5s infinite; }
-        
-        /* Call Controls */
-        .controls-container { display: flex; gap: 20px; margin-bottom: 30px; justify-content: center; width: 100%; }
-        .control-circle { width: 55px; height: 55px; border-radius: 50%; background: rgba(255,255,255,0.1); border: none; color: white; font-size: 1.2rem; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; }
-        .control-circle.active-ctl { background: #fff; color: #2f3542; }
-        .btn-end { background: #ff4757; width: 65px; height: 65px; font-size: 1.5rem; }
-        .btn-accept { background: #2ed573; width: 65px; height: 65px; font-size: 1.5rem; }
-
-        @keyframes blink { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
-    </style>
 </head>
-<body>
+<body class="bg-gray-100 font-sans antialiased h-screen flex flex-col">
 
-<div class="app-container">
+    <!-- =========== ১. লগইন এবং রেজিস্ট্রেশন সেকশন =========== -->
+    <div id="auth-section" class="flex-1 flex flex-col justify-center items-center px-4">
+        <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
+            <h2 id="auth-title" class="text-3xl font-extrabold text-gray-800 text-center mb-6">লগইন করুন</h2>
+            
+            <div class="space-y-4">
+                <!-- নাম ইনপুট (শুধুমাত্র রেজিস্ট্রেশনের সময় দেখাবে) -->
+                <div id="name-box" class="hidden">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">আপনার নাম</label>
+                    <input type="text" id="auth-name" placeholder="নাম লিখুন" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition">
+                </div>
 
-    <div id="loginPage" class="page auth-bg active">
-        <div class="logo">ToonTalk</div>
-        <div class="auth-box">
-            <h3 style="margin-bottom: 15px; color: #2f3542;">লগইন করুন</h3>
-            <div class="input-group">
-                <input type="number" id="loginPhone" placeholder="মোবাইল নম্বর">
-            </div>
-            <div class="input-group">
-                <input type="password" id="loginPass" placeholder="পাসওয়ার্ড">
-            </div>
-            <button class="btn btn-primary" onclick="login()">প্রবেশ করুন</button>
-            <button class="btn btn-link" onclick="switchPage('registerPage')">নতুন অ্যাকাউন্ট তৈরি করুন</button>
-        </div>
-    </div>
+                <!-- মোবাইল নম্বর ইনপুট -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">মোবাইল নম্বর</label>
+                    <input type="tel" id="auth-phone" placeholder="০১৭XXXXXXXX" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition">
+                </div>
 
-    <div id="registerPage" class="page auth-bg">
-        <div class="logo">ToonTalk</div>
-        <div class="auth-box">
-            <h3 style="margin-bottom: 15px; color: #2f3542;">নতুন অ্যাকাউন্ট</h3>
-            <div class="input-group">
-                <input type="text" id="regName" placeholder="আপনার নাম">
-            </div>
-            <div class="input-group">
-                <input type="number" id="regPhone" placeholder="মোবাইল নম্বর">
-            </div>
-            <div class="input-group">
-                <input type="password" id="regPass" placeholder="পাসওয়ার্ড">
-            </div>
-            <button class="btn btn-primary" onclick="register()">নিবন্ধন করুন</button>
-            <button class="btn btn-link" onclick="switchPage('loginPage')">ইতিমধ্যে অ্যাকাউন্ট আছে? লগইন</button>
-        </div>
-    </div>
+                <!-- পাসওয়ার্ড ইনপুট -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">পাসওয়ার্ড</label>
+                    <input type="password" id="auth-password" placeholder="******" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition">
+                </div>
 
-    <div id="dashPage" class="page">
-        <div class="dash-header">
-            <h3 id="welcomeText">হ্যালো!</h3>
-            <button onclick="logout()" style="background: none; border: none; color: white; font-weight: bold; cursor: pointer;">লগআউট</button>
-        </div>
-        <div class="user-list" id="usersContainer">
-            </div>
-    </div>
-
-    <div id="callPage" class="page call-bg">
-        <div class="caller-info">
-            <div class="caller-avatar"><i class="fa-solid fa-user"></i></div>
-            <h2 id="callTargetName">ইউজার</h2>
-            <div class="call-status" id="callStatusText">Calling...</div>
-        </div>
-
-        <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-            <div class="controls-container" id="runningCallControls" style="display: none;">
-                <button class="control-circle" id="muteBtn" onclick="toggleMute()"><i class="fa-solid fa-microphone-slash"></i></button>
-                <button class="control-circle" id="speakerBtn" onclick="toggleSpeaker()"><i class="fa-solid fa-volume-high"></i></button>
-                <button class="control-circle" id="camBtn" onclick="toggleCamera()"><i class="fa-solid fa-video"></i></button>
-            </div>
-
-            <div class="controls-container">
-                <button class="control-circle btn-accept" id="acceptBtn" onclick="acceptCall()" style="display: none;"><i class="fa-solid fa-phone"></i></button>
-                <button class="control-circle btn-end" id="endBtn" onclick="endCall()"><i class="fa-solid fa-phone-slash"></i></button>
+                <!-- সাবমিট বাটন -->
+                <button id="auth-btn" onclick="handleAuth()" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-red-200 transition transform active:scale-95">লগইন</button>
+                
+                <!-- টগল বাটন -->
+                <p class="text-center text-sm text-gray-600 mt-4">
+                    <span id="auth-toggle-text">নতুন অ্যাকাউন্ট তৈরি করতে চান?</span>
+                    <button onclick="toggleAuthMode()" id="auth-toggle-btn" class="text-red-500 font-bold ml-1 hover:underline">রেজিস্ট্রেশন করুন</button>
+                </p>
             </div>
         </div>
     </div>
 
-</div>
+    <!-- =========== ২. মেইন ড্যাশবোর্ড সেকশন (লগইন এর পর দেখাবে) =========== -->
+    <div id="dashboard-section" class="hidden flex-1 flex flex-col h-full">
+        <!-- ড্যাশবোর্ড হেডার -->
+        <header class="bg-red-500 text-white px-4 py-4 shadow-md flex justify-between items-center sticky top-0 z-50">
+            <h1 id="welcome-msg" class="text-lg font-bold">হ্যালো, ইউজার</h1>
+            <button onclick="logout()" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm font-bold transition">লগআউট</button>
+        </header>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-    import { getDatabase, ref, set, get, child, onValue, update } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
+        <!-- ইউজার লিস্ট এরিয়া -->
+        <main class="flex-1 overflow-y-auto p-4 space-y-3 max-w-2xl w-full mx-auto" id="user-list">
+            <!-- জাভাস্ক্রিপ্ট দিয়ে এখানে ইউজার লিস্ট ভেসে উঠবে -->
+        </main>
+    </div>
 
-    // আপনার ফায়ারবেস প্রজেক্ট কনফিগারেশন
-    const firebaseConfig = {
-        apiKey: "AIzaSyBq9tQNoeJq9jMmME0aaaZRfz-oxfWdQaw",
-        authDomain: "toontalk-98d67.firebaseapp.com",
-        projectId: "toontalk-98d67",
-        storageBucket: "toontalk-98d67.firebasestorage.app",
-        messagingSenderId: "774949564999",
-        appId: "1:774949564999:web:51084ac4102cbe73ba3762",
-        databaseURL: "https://toontalk-98d67-default-rtdb.firebaseio.com/"
-    };
+    <!-- =========== ৩. চ্যাট স্ক্রিন সেকশন (মেসেজ, ওপরে ৩টি বাটন) =========== -->
+    <div id="chat-section" class="hidden flex-1 flex flex-col h-full bg-slate-50">
+        <!-- চ্যাট হেডার (৩টি বাটন সহ) -->
+        <header class="bg-white border-b border-gray-200 px-4 py-3 flex justify-between items-center sticky top-0 z-50 shadow-sm">
+            <!-- বামে ব্যাক বাটন ও নাম -->
+            <div class="flex items-center space-x-3">
+                <button onclick="backToDashboard()" class="text-gray-600 hover:text-gray-800 text-xl p-1">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <div>
+                    <h3 id="chat-user-name" class="font-bold text-gray-800 text-base">ইউজারের নাম</h3>
+                    <p class="text-xs text-green-500 font-medium"><i class="fa-solid fa-circle text-[8px] mr-1"></i>অনলাইন</p>
+                </div>
+            </div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+            <!-- ডানে আপনার কাঙ্ক্ষিত ৩টি বাটন (অডিও, ভিডিও, প্রোফাইল) -->
+            <div class="flex items-center space-x-2">
+                <button onclick="startAudioCall()" class="w-10 h-10 rounded-full bg-green-50 hover:bg-green-100 text-green-600 flex items-center justify-center transition active:scale-95" title="অডিও কল">
+                    <i class="fa-solid fa-phone text-lg"></i>
+                </button>
+                <button onclick="startVideoCall()" class="w-10 h-10 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition active:scale-95" title="ভিডিও কল">
+                    <i class="fa-solid fa-video text-lg"></i>
+                </button>
+                <button onclick="openProfileModal()" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center transition active:scale-95" title="প্রোফাইল">
+                    <i class="fa-solid fa-user text-lg"></i>
+                </button>
+            </div>
+        </header>
 
-    let currentUser = null;
-    let currentCallId = null;
+        <!-- মাঝখানের মেসেজ হিস্ট্রি এরিয়া -->
+        <div id="message-container" class="flex-1 overflow-y-auto p-4 space-y-3">
+            <!-- পুরনো এবং নতুন সব মেসেজ এখানে অটো লোড হবে -->
+        </div>
 
-    window.switchPage = function(pageId) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-    }
+        <!-- নিচের মেসেজ ইনপুট বক্স -->
+        <footer class="bg-white border-t border-gray-200 p-3 flex items-center space-x-2 sticky bottom-0">
+            <input type="text" id="msg-input" placeholder="এখানে মেসেজ লিখুন..." class="flex-1 bg-gray-100 px-4 py-3 rounded-full border-none focus:ring-2 focus:ring-red-500 outline-none text-sm transition">
+            <button onclick="sendMessage()" class="w-11 h-11 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-md shadow-red-100 transition active:scale-95">
+                <i class="fa-solid fa-paper-plane text-sm ml-0.5"></i>
+            </button>
+        </footer>
+    </div>
 
-    // ওটিপি ছাড়া ডিরেক্ট মোবাইল রেজিস্ট্রেশন
-    window.register = function() {
-        const name = document.getElementById('regName').value;
-        const phone = document.getElementById('regPhone').value;
-        const pass = document.getElementById('regPass').value;
+    <!-- =========== ৪. প্রোফাইল পপআপ বা মডাল =========== -->
+    <div id="profile-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex justify-center items-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center shadow-2xl relative">
+            <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+            <div class="w-20 h-20 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold">
+                <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <h4 id="modal-user-name" class="text-xl font-bold text-gray-800">নাম</h4>
+            <p id="modal-user-phone" class="text-gray-500 text-sm mt-1">০১৭XXXXXXXX</p>
+            <p class="text-xs bg-gray-100 text-gray-600 inline-block px-3 py-1 rounded-full mt-4 border border-gray-200">N-Talk মেম্বার</p>
+        </div>
+    </div>
 
-        if(!name || !phone || !pass) return alert("দয়া করে সব ঘর পূরণ করুন!");
+    <!-- ======================================================= -->
+    <!-- ============ ফায়ারবেস এবং মূল লজিক স্ক্রিপ্ট ============ -->
+    <!-- ======================================================= -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, get, child, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        const userRef = ref(db, 'users/' + phone);
-        get(userRef).then((snapshot) => {
-            if (snapshot.exists()) {
-                alert("এই নম্বরটি ইতিমধ্যে নিবন্ধিত!");
+        // ফায়ারবেস কনফিগারেশন (আপনার ডাটাবেজ URL অনুযায়ী সেট করা)
+        const firebaseConfig = {
+            databaseURL: "https://toontalk-98d67-default-rtdb.firebaseio.com/"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // গ্লোবাল ভ্যারিয়েবলসমূহ
+        let isSignUpMode = false;
+        let currentUser = JSON.parse(localStorage.getItem("chat_current_user")) || null;
+        let activeChatUserPhone = null;
+
+        // পেজ লোড হওয়ার সাথে সাথে চেক করবে ইউজার লগইন আছে কিনা
+        window.onload = function() {
+            checkUserSession();
+        };
+
+        function checkUserSession() {
+            if (currentUser) {
+                document.getElementById("auth-section").classList.add("hidden");
+                document.getElementById("dashboard-section").classList.remove("hidden");
+                document.getElementById("chat-section").classList.add("hidden");
+                document.getElementById("welcome-msg").innerText = `হ্যালো, ${currentUser.name}`;
+                loadUserList();
             } else {
-                set(userRef, { name: name, phone: phone, password: pass, status: "offline" }).then(() => {
-                    alert("নিবন্ধন সফল হয়েছে! এবার লগইন করুন।");
-                    switchPage('loginPage');
+                document.getElementById("auth-section").classList.remove("hidden");
+                document.getElementById("dashboard-section").classList.add("hidden");
+                document.getElementById("chat-section").classList.add("hidden");
+            }
+        }
+
+        // লগইন ও রেজিস্ট্রেশন মোড পরিবর্তন করা
+        window.toggleAuthMode = function() {
+            isSignUpMode = !isSignUpMode;
+            document.getElementById("name-box").classList.toggle("hidden", !isSignUpMode);
+            document.getElementById("auth-title").innerText = isSignUpMode ? "নতুন অ্যাকাউন্ট" : "লগইন করুন";
+            document.getElementById("auth-btn").innerText = isSignUpMode ? "নিবন্ধন করুন" : "লগইন";
+            document.getElementById("auth-toggle-text").innerText = isSignUpMode ? "আগে থেকেই অ্যাকাউন্ট আছে?" : "নতুন অ্যাকাউন্ট তৈরি করতে চান?";
+            document.getElementById("auth-toggle-btn").innerText = isSignUpMode ? "লগইন করুন" : "রেজিস্ট্রেশন করুন";
+        };
+
+        // লগইন এবং রেজিস্ট্রেশন হ্যান্ডেল করার ফাংশন
+        window.handleAuth = function() {
+            const name = document.getElementById("auth-name").value.trim();
+            const phone = document.getElementById("auth-phone").value.trim();
+            const password = document.getElementById("auth-password").value.trim();
+
+            if (!phone || !password || (isSignUpMode && !name)) {
+                alert("দয়া করে সব তথ্য সঠিকভাবে পূরণ করুন!");
+                return;
+            }
+
+            const userRef = ref(db, 'users/' + phone);
+
+            if (isSignUpMode) {
+                // রেজিস্ট্রেশন লজিক
+                get(userRef).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        alert("এই মোবাইল নম্বর দিয়ে অলরেডি অ্যাকাউন্ট খোলা আছে!");
+                    } else {
+                        set(userRef, { name: name, phone: phone, password: password }).then(() => {
+                            alert("অ্যাকাউন্ট তৈরি সফল হয়েছে!");
+                            currentUser = { name: name, phone: phone };
+                            localStorage.setItem("chat_current_user", JSON.stringify(currentUser));
+                            checkUserSession();
+                        });
+                    }
+                });
+            } else {
+                // লগইন লজিক
+                get(userRef).then((snapshot) => {
+                    if (snapshot.exists() && snapshot.val().password === password) {
+                        currentUser = { name: snapshot.val().name, phone: phone };
+                        localStorage.setItem("chat_current_user", JSON.stringify(currentUser));
+                        checkUserSession();
+                    } else {
+                        alert("মোবাইল নম্বর অথবা পাসওয়ার্ড ভুল হয়েছে!");
+                    }
                 });
             }
-        });
-    }
+        };
 
-    // লগইন প্রসেস
-    window.login = function() {
-        const phone = document.getElementById('loginPhone').value;
-        const pass = document.getElementById('loginPass').value;
-
-        if(!phone || !pass) return alert("নম্বর এবং পাসওয়ার্ড দিন!");
-
-        get(child(ref(db), `users/${phone}`)).then((snapshot) => {
-            if (snapshot.exists() && snapshot.val().password === pass) {
-                currentUser = snapshot.val();
-                document.getElementById('welcomeText').innerText = "হ্যালো, " + currentUser.name;
-                update(ref(db, `users/${phone}`), { status: "online" });
-                switchPage('dashPage');
-                listenForUsers();
-                listenForCalls();
-            } else {
-                alert("আপনার নম্বর বা পাসওয়ার্ড ভুল!");
-            }
-        });
-    }
-
-    // অনলাইন ব্যবহারকারীদের তালিকা লোড করা
-    function listenForUsers() {
-        onValue(ref(db, 'users'), (snapshot) => {
-            const container = document.getElementById('usersContainer');
-            container.innerHTML = "";
-            snapshot.forEach((childSnapshot) => {
-                const user = childSnapshot.val();
-                if(user.phone !== currentUser.phone) {
-                    const card = document.createElement('div');
-                    card.className = "user-card";
-                    card.innerHTML = `
-                        <div>
-                            <span class="online-dot" style="background: ${user.status === 'online' ? '#2ed573' : '#ccc'}"></span>
-                            <strong>${user.name}</strong> (${user.phone})
-                        </div>
-                        <button class="call-btn" onclick="makeCall('${user.phone}', '${user.name}')">Call</button>
-                    `;
-                    container.appendChild(card);
+        // ডাটাবেজ থেকে সমস্ত ইউজারের লিস্ট লোড করা
+        function loadUserList() {
+            const usersRef = ref(db, 'users');
+            onValue(usersRef, (snapshot) => {
+                const userListContainer = document.getElementById("user-list");
+                userListContainer.innerHTML = "";
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const user = childSnapshot.val();
+                        // নিজের আইডিটি লিস্টে দেখাবে না
+                        if (user.phone !== currentUser.phone) {
+                            const userCard = document.createElement("div");
+                            userCard.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center hover:shadow-md transition";
+                            userCard.innerHTML = `
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-red-100 text-red-500 font-bold rounded-full flex items-center justify-center text-sm">
+                                        ${user.name.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-800">${user.name}</h4>
+                                        <p class="text-xs text-gray-500">${user.phone}</p>
+                                    </div>
+                                </div>
+                                <button onclick="openChat('${user.phone}', '${user.name}')" class="bg-red-500 hover:bg-red-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-sm shadow-red-100 active:scale-95">
+                                    <i class="fa-solid fa-message mr-1"></i> Message
+                                </button>
+                            `;
+                            userListContainer.appendChild(userCard);
+                        }
+                    });
+                } else {
+                    userListContainer.innerHTML = `<p class="text-center text-gray-500 py-8">কোনো ইউজার পাওয়া যায়নি।</p>`;
                 }
             });
-        });
-    }
-
-    // কল করার ফাংশন
-    window.makeCall = function(targetPhone, targetName) {
-        currentCallId = currentUser.phone + "_" + targetPhone;
-        set(ref(db, 'calls/' + currentCallId), {
-            caller: currentUser.phone,
-            callerName: currentUser.name,
-            receiver: targetPhone,
-            status: "calling"
-        });
-        document.getElementById('callTargetName').innerText = targetName;
-        document.getElementById('callStatusText').innerText = "Calling...";
-        document.getElementById('runningCallControls').style.display = "none";
-        document.getElementById('acceptBtn').style.display = "none";
-        switchPage('callPage');
-    }
-
-    // কল রিসিভ ও সিগন্যাল মনিটর
-    function listenForCalls() {
-        onValue(ref(db, 'calls'), (snapshot) => {
-            let activeCallFound = false;
-            snapshot.forEach((childSnapshot) => {
-                const call = childSnapshot.val();
-                if(call.receiver === currentUser.phone && call.status === "calling") {
-                    activeCallFound = true;
-                    currentCallId = childSnapshot.key;
-                    document.getElementById('callTargetName').innerText = call.callerName;
-                    document.getElementById('callStatusText').innerText = "Incoming Call...";
-                    document.getElementById('acceptBtn').style.display = "flex";
-                    document.getElementById('runningCallControls').style.display = "none";
-                    switchPage('callPage');
-                }
-                if(currentCallId === childSnapshot.key && call.status === "accepted") {
-                    activeCallFound = true;
-                    document.getElementById('callStatusText').innerText = "Connected";
-                    document.getElementById('runningCallControls').style.display = "flex";
-                    document.getElementById('acceptBtn').style.display = "none";
-                }
-            });
-            if(!activeCallFound && document.getElementById('callPage').classList.contains('active')) {
-                switchPage('dashPage');
-            }
-        });
-    }
-
-    window.acceptCall = function() {
-        update(ref(db, 'calls/' + currentCallId), { status: "accepted" });
-    }
-
-    window.endCall = function() {
-        if(currentCallId) {
-            set(ref(db, 'calls/' + currentCallId), null);
         }
-        switchPage('dashPage');
-    }
 
-    // মিউট, স্পিকার এবং ক্যামেরা বোতামের টগল
-    let isMuted = false, isSpeaker = false, isCam = false;
-    window.toggleMute = function() {
-        isMuted = !isMuted;
-        document.getElementById('muteBtn').classList.toggle('active-ctl', isMuted);
-    }
-    window.toggleSpeaker = function() {
-        isSpeaker = !isSpeaker;
-        document.getElementById('speakerBtn').classList.toggle('active-ctl', isSpeaker);
-    }
-    window.toggleCamera = function() {
-        isCam = !isCam;
-        document.getElementById('camBtn').classList.toggle('active-ctl', isCam);
-    }
+        // চ্যাট উইন্ডো ওপেন করার ফাংশন
+        window.openChat = function(phone, name) {
+            activeChatUserPhone = phone;
+            document.getElementById("dashboard-section").classList.add("hidden");
+            document.getElementById("chat-section").classList.remove("hidden");
+            document.getElementById("chat-user-name").innerText = name;
+            
+            loadMessages();
+        };
 
-    window.logout = function() {
-        if(currentUser) update(ref(db, `users/${currentUser.phone}`), { status: "offline" });
-        switchPage('loginPage');
-    }
-</script>
+        // ড্যাশবোর্ডে ফিরে যাওয়ার ফাংশন
+        window.backToDashboard = function() {
+            activeChatUserPhone = null;
+            document.getElementById("chat-section").classList.add("hidden");
+            document.getElementById("dashboard-section").classList.remove("hidden");
+        };
+
+        // রিয়েল-টাইমে মেসেজ হিস্ট্রি লোড করা
+        function loadMessages() {
+            // চ্যাট রুমের জন্য একটি ইউনিক আইডি তৈরি (যেমন: user1_user2)
+            const chatRoomId = currentUser.phone < activeChatUserPhone ? 
+                               `${currentUser.phone}_${activeChatUserPhone}` : 
+                               `${activeChatUserPhone}_${currentUser.phone}`;
+
+            const messagesRef = ref(db, 'messages/' + chatRoomId);
+            
+            onValue(messagesRef, (snapshot) => {
+                const container = document.getElementById("message-container");
+                container.innerHTML = "";
+
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const msgData = childSnapshot.val();
+                        const isMe = msgData.sender === currentUser.phone;
+
+                        const msgRow = document.createElement("div");
+                        msgRow.className = `flex ${isMe ? 'justify-end' : 'justify-start'} mb-1`;
+
+                        msgRow.innerHTML = `
+                            <div class="max-w-[75%] px-4 py-2.5 rounded-2xl text-sm shadow-sm ${
+                                isMe ? 'bg-red-500 text-white rounded-br-none' : 'bg-white text-gray-800 border border-gray-100 rounded-bl-none'
+                            }">
+                                <p>${msgData.message}</p>
+                            </div>
+                        `;
+                        container.appendChild(msgRow);
+                    });
+                    // অটো স্ক্রোল ডাউন করে একদম নিচের নতুন মেসেজে নিয়ে যাবে
+                    container.scrollTop = container.scrollHeight;
+                } else {
+                    container.innerHTML = `<p class="text-center text-gray-400 text-xs py-12">কোনো পুরনো মেসেজ নেই। চ্যাট শুরু করুন!</p>`;
+                }
+            });
+        }
+
+        // মেসেজ পাঠানোর ফাংশন
+        window.sendMessage = function() {
+            const input = document.getElementById("msg-input");
+            const text = input.value.trim();
+            if (!text) return;
+
+            const chatRoomId = currentUser.phone < activeChatUserPhone ? 
+                               `${currentUser.phone}_${activeChatUserPhone}` : 
+                               `${activeChatUserPhone}_${currentUser.phone}`;
+
+            const messagesRef = ref(db, 'messages/' + chatRoomId);
+            const newMessageRef = push(messagesRef);
+
+            set(newMessageRef, {
+                sender: currentUser.phone,
+                message: text,
+                timestamp: Date.now()
+            }).then(() => {
+                input.value = "";
+            });
+        };
+
+        // ওপরের ৩টি বাটনের অ্যাকশন সমূহ
+        window.startAudioCall = function() {
+            alert(document.getElementById("chat-user-name").innerText + " কে অ디오 কল করা হচ্ছে... (ফিচারটি ডেভেলপমেন্টে আছে)");
+        };
+
+        window.startVideoCall = function() {
+            alert(document.getElementById("chat-user-name").innerText + " কে ভিডিও কল করা হচ্ছে... (ফিচারটি ডেভেলপমেন্টে আছে)");
+        };
+
+        window.openProfileModal = function() {
+            document.getElementById("modal-user-name").innerText = document.getElementById("chat-user-name").innerText;
+            document.getElementById("modal-user-phone").innerText = activeChatUserPhone;
+            document.getElementById("profile-modal").classList.remove("hidden");
+        };
+
+        window.closeProfileModal = function() {
+            document.getElementById("profile-modal").classList.add("hidden");
+        };
+
+        // লগআউট ফাংশন
+        window.logout = function() {
+            localStorage.removeItem("chat_current_user");
+            currentUser = null;
+            checkUserSession();
+        };
+    </script>
 </body>
-</html>
+                </html>
