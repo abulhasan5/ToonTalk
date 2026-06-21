@@ -442,10 +442,21 @@ function listenForIncomingCalls() {
         };
 
         window.logout = function() {
-            localStorage.removeItem("chat_current_user");
-            currentUser = null;
-            checkUserSession();
-        };
-    </script>
+    localStorage.removeItem("chat_current_user");
+    currentUser = null;
+    checkUserSession();
+};
+
+setTimeout(() => {
+    const splash = document.getElementById('splash-screen');
+    if(splash) {
+        splash.style.transition = 'opacity 0.5s';
+        splash.style.opacity = '0';
+        setTimeout(() => {
+            splash.style.display = 'none';
+        }, 500);
+    }
+}, 3000);
+</script>
 </body>
 </html>
